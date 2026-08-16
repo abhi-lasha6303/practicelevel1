@@ -1,0 +1,5 @@
+#to store all python packages/dependiceies your project level
+requests
+pytest
+pytest-html
+python-dotenv
