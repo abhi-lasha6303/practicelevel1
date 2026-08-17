@@ -18,7 +18,7 @@ pipeline {
 
         stage('Run API Tests') {
             steps {
-                bat 'python -m pytest -v --html=reports/report.html --self-contained-html || exit 0'
+                bat 'python -m pytest -v --html=reports/report.html --self-contained-html --alluredir=allure-results || exit 0'
             }
         }
     }
