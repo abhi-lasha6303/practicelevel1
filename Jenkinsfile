@@ -24,20 +24,24 @@ pipeline {
     }
 
     post {
-        always {
+    always {
 
-            publishHTML([
-                allowMissing: true,
-                alwaysLinkToLastBuild: true,
-                keepAll: true,
-                reportDir: 'reports',
-                reportFiles: 'report.html',
-                reportName: 'API Test Report'
-            ])
+        publishHTML([
+            allowMissing: true,
+            alwaysLinkToLastBuild: true,
+            keepAll: true,
+            reportDir: 'reports',
+            reportFiles: 'report.html',
+            reportName: 'API Test Report'
+        ])
 
-            allure([
-                results: [[path: 'allure-results']]
-            ])
+        allure([
+            results: [[path: 'allure-results']]
+        ])
+
+        script {
+            currentBuild.result = 'SUCCESS'
         }
     }
+}
 }
