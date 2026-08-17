@@ -12,15 +12,21 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                bat 'python -m pip install -r requirements.txt'
+                bat '''
+                    python -m pip install -r requirements.txt
+                '''
             }
         }
 
         stage('Run API Tests') {
             steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {
-                    bat 'python -m pytest -v --html=reports/report.html --self-contained-html --alluredir=allure-results'
-                }
+                bat '''
+                    python -m pytest -v ^
+                    --html=reports/report.html ^
+                    --self-contained-html ^
+                    --alluredir=allure-results ^
+                    || exit 0
+                '''
             }
         }
     }
@@ -39,12 +45,12 @@ pipeline {
             ])
 
             allure([
-                results: [[path: 'allure-results']]
+                includeProperties: false,
+                jdk: '',
+                results: [
+                    [path: 'allure-results']
+                ]
             ])
-
-            script {
-                currentBuild.result = 'SUCCESS'
-            }
         }
     }
 }
