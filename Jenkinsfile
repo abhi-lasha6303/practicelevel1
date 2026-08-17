@@ -25,13 +25,18 @@ pipeline {
 
     post {
         always {
+
             publishHTML([
-                allowMissing: false,
+                allowMissing: true,
                 alwaysLinkToLastBuild: true,
                 keepAll: true,
                 reportDir: 'reports',
                 reportFiles: 'report.html',
                 reportName: 'API Test Report'
+            ])
+
+            allure([
+                results: [[path: 'allure-results']]
             ])
         }
     }
