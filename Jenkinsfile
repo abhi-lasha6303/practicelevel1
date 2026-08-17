@@ -18,30 +18,33 @@ pipeline {
 
         stage('Run API Tests') {
             steps {
-                bat 'python -m pytest -v --html=reports/report.html --self-contained-html --alluredir=allure-results || exit 0'
+                catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {
+                    bat 'python -m pytest -v --html=reports/report.html --self-contained-html --alluredir=allure-results'
+                }
             }
         }
     }
 
     post {
-    always {
 
-        publishHTML([
-            allowMissing: true,
-            alwaysLinkToLastBuild: true,
-            keepAll: true,
-            reportDir: 'reports',
-            reportFiles: 'report.html',
-            reportName: 'API Test Report'
-        ])
+        always {
 
-        allure([
-            results: [[path: 'allure-results']]
-        ])
+            publishHTML([
+                allowMissing: true,
+                alwaysLinkToLastBuild: true,
+                keepAll: true,
+                reportDir: 'reports',
+                reportFiles: 'report.html',
+                reportName: 'API Test Report'
+            ])
 
-        script {
-            currentBuild.result = 'SUCCESS'
+            allure([
+                results: [[path: 'allure-results']]
+            ])
+
+            script {
+                currentBuild.result = 'SUCCESS'
+            }
         }
     }
-}
 }
