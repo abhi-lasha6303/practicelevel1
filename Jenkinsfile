@@ -30,28 +30,28 @@ pipeline {
     }
 
     post {
+    always {
 
-        always {
+        publishHTML([
+            allowMissing: true,
+            alwaysLinkToLastBuild: true,
+            keepAll: true,
+            reportDir: 'reports',
+            reportFiles: 'report.html',
+            reportName: 'API Test Report'
+        ])
 
-            publishHTML([
-                allowMissing: true,
-                alwaysLinkToLastBuild: true,
-                keepAll: true,
-                reportDir: 'reports',
-                reportFiles: 'report.html',
-                reportName: 'API Test Report'
-            ])
+        allure([
+            includeProperties: false,
+            jdk: '',
+            results: [[path: 'allure-results']]
+        ])
+    }
 
-            allure([
-                includeProperties: false,
-                jdk: '',
-                results: [[path: 'allure-results']]
-            ])
-
-            // Always make Jenkins build SUCCESS
-            script {
-                currentBuild.result = 'SUCCESS'
-            }
+    cleanup {
+        script {
+            currentBuild.result = 'SUCCESS'
         }
     }
+}
 }
